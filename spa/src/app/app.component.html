@@ -1,0 +1,16 @@
+<h2>{{ title }}</h2>
+
+<div *ngIf="loading">Loading...</div>
+
+<div *ngIf="error">Error: {{ error }}</div>
+
+<div *ngIf="!loading && !error">
+  <div *ngFor="let webApi of webApis; let i = index">
+    <div>
+      <div>Date: {{ webApi.date }}</div>
+      <div>Temperature (C): {{ webApi.temparatureC }}</div>
+      <div>Summary: {{ webApi.summary }}</div>
+    </div>
+    <hr />
+  </div>
+</div>

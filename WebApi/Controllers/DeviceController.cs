@@ -35,18 +35,6 @@ public class DeviceController : ControllerBase
         var device = await _deviceService.GetSessionsByNameAsync(id, name);
         return Ok(device);
     }
-
-    // [HttpPost]
-    // public async Task<IActionResult> AddSession([FromBody] SessionForCreationDto? session)
-    // {
-    //     if (session == null)
-    //     {
-    //         return BadRequest("Session object is null");
-    //     }
-    //     
-    //     var entityDto = await _deviceService.AddSessionAsync(session);
-    //     return CreatedAtAction(nameof(GetSessionsByName), "Sessions", new { id = entityDto.Id });
-    // }
     
     [HttpPost]
     public async Task<IActionResult> AddSession([FromBody] SessionForCreationDto? session)
@@ -74,14 +62,7 @@ public class DeviceController : ControllerBase
             return StatusCode(500, "An error occurred while processing your request");
         }
     }
- 
     
-    // [HttpPost]
-    // public ActionResult CreateDeviceInfo([FromBody] DeviceDto deviceDto)
-    // {
-    //     
-    // }
-    //
     // [HttpDelete("{id}")]
     // public ActionResult DeleteDeviceInfo(Guid id)
     // {

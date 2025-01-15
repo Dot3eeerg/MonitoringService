@@ -1,1 +1,111 @@
-/* You can add global styles to this file, and also import other style files */
+@primary-color: #ffffff;
+@secondary-color: #b0b0b0;
+@border-color: #444;
+@background-dark: #1a1a1a;
+@background-light: #2d2d2d;
+@button-primary: #222;
+@button-hover: #444;
+@button-active: #222;
+@input-background: #333;
+@input-border: #444;
+@input-focus: #4a90e2;
+
+.card-base() {
+  margin: 20px;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.transition(@property: all, @duration: 0.3s) {
+  transition: @property @duration ease-in-out;
+}
+
+body {
+  margin: 30;
+  padding: 0;
+  background-color: @background-dark;
+  color: @primary-color;
+  font-family: Arial, sans-serif;
+}
+
+:host {
+  background-color: @background-dark;
+  color: @primary-color;
+  min-height: 100vh;
+  display: block;
+}
+
+h2 {
+  color: @primary-color;
+  text-align: center;
+}
+
+nav {
+  margin: 20px 20px;
+  padding: 10px;
+  background-color: @background-light;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.button {
+  display: inline-block;
+  padding: 8px 16px;
+  margin: 5px;
+  border: none;
+  border-radius: 4px;
+  background-color: @button-primary;
+  color: @primary-color;
+  text-decoration: none;
+  font-size: 1em;
+  font-weight: 500;
+  cursor: pointer;
+  .transition();
+
+  &:hover {
+    background-color: @button-hover;
+    text-decoration: none;
+    .transition(background-color);
+  }
+
+  &:active {
+    background-color: @button-active;
+    transform: translateY(1px);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px fade(@primary-color, 30%);
+  }
+}
+
+/* Global loading and error states */
+.loading, .error {
+  .card-base();
+  text-align: center;
+  padding: 20px;
+}
+
+.loading {
+  background-color: fade(@background-light, 50%);
+  color: @primary-color;
+}
+
+.error {
+  background-color: fade(#ff4444, 10%);
+  color: #ff4444;
+  border: 1px solid fade(#ff4444, 30%);
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+  .button {
+    padding: 6px 12px;
+    font-size: 0.9em;
+  }
+
+  nav {
+    margin: 10px 0;
+    padding: 5px;
+  }
+}

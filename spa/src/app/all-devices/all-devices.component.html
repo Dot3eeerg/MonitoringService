@@ -1,0 +1,22 @@
+<div *ngIf="loading" class="loading">Loading...</div>
+
+<div *ngIf="error" class="error">Error: {{ error }}</div>
+
+<div *ngIf="!loading && !error">
+  <div *ngFor="let device of devices">
+    <div class="device-card">
+      <h3>Device ID: {{ device.id }}</h3>
+
+      <div class="sessions">
+        <h4>Sessions:</h4>
+        <div *ngFor="let session of device.sessions" class="session-card">
+          <p>Name: {{ session.name }}</p>
+          <p>Start Time: {{ session.startTime | date: "medium" }}</p>
+          <p>End Time: {{ session.endTime | date: "medium" }}</p>
+          <p>Version: {{ session.version }}</p>
+          <hr />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

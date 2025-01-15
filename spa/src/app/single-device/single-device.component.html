@@ -1,0 +1,50 @@
+<div class="search-form">
+  <form (ngSubmit)="onSubmit()" #deviceForm="ngForm">
+    <div class="form-group">
+      <label for="deviceId">Device ID:</label>
+      <input
+        type="text"
+        id="deviceId"
+        name="deviceId"
+        [(ngModel)]="searchQuery.deviceId"
+        placeholder="Enter device ID"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="sessionName">Session Name (optional):</label>
+      <input
+        type="text"
+        id="sessionName"
+        name="sessionName"
+        [(ngModel)]="searchQuery.sessionName"
+        placeholder="Enter session name"
+      />
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="button">Search</button>
+      <button type="button" class="button" (click)="resetForm()">Reset</button>
+    </div>
+  </form>
+</div>
+
+<div *ngIf="loading" class="loading">Loading...</div>
+
+<div *ngIf="error" class="error">Error: {{ error }}</div>
+
+<div *ngIf="device && !loading && !error" class="device-card">
+  <h3>Device ID: {{ device.id }}</h3>
+
+  <div class="sessions">
+    <h4>Sessions:</h4>
+    <div *ngFor="let session of device.sessions" class="session-card">
+      <p>Name: {{ session.name }}</p>
+      <p>Start Time: {{ session.startTime | date: "medium" }}</p>
+      <p>End Time: {{ session.endTime | date: "medium" }}</p>
+      <p>Version: {{ session.version }}</p>
+      <hr />
+    </div>
+  </div>
+</div>

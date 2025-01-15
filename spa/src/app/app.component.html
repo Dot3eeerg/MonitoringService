@@ -1,16 +1,23 @@
 <h2>{{ title }}</h2>
 
-<div *ngIf="loading">Loading...</div>
+<nav>
+  <a
+    class="button"
+    routerLink="/single-device"
+    routerLinkActive="activebutton"
+    ariaCurrentWhenActive="page"
+  >
+    Single device info
+  </a>
+  |
+  <a
+    class="button"
+    routerLink="/all-devices"
+    routerLinkActive="activebutton"
+    ariaCurrentWhenActive="page"
+  >
+    All devices info
+  </a>
+</nav>
 
-<div *ngIf="error">Error: {{ error }}</div>
-
-<div *ngIf="!loading && !error">
-  <div *ngFor="let webApi of webApis; let i = index">
-    <div>
-      <div>Date: {{ webApi.date }}</div>
-      <div>Temperature (C): {{ webApi.temparatureC }}</div>
-      <div>Summary: {{ webApi.summary }}</div>
-    </div>
-    <hr />
-  </div>
-</div>
+<router-outlet></router-outlet>

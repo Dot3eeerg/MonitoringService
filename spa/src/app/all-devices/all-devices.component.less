@@ -1,0 +1,67 @@
+@import '..//../styles.less';
+
+.device-card {
+  .card-base();
+  border: 1px solid @border-color;
+  background-color: @background-light;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+  &:hover {
+    .transition(transform);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  }
+
+  h3 {
+    color: @primary-color;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+  }
+}
+
+.sessions {
+  h4 {
+    color: @secondary-color;
+    margin: 10px 0;
+    font-size: 1.1em;
+  }
+}
+
+.session-card {
+  .card-base();
+  margin: 10px 0;
+  background-color: darken(@background-light, 3%);
+  border: 1px solid @border-color;
+
+  &:hover {
+    .transition(background-color);
+    background-color: darken(@background-light, 5%);
+  }
+
+  p {
+    margin: 8px 0;
+    line-height: 1.4;
+
+    &:first-child {
+      font-weight: bold;
+      color: @primary-color;
+    }
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid @border-color;
+    margin: 10px 0;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .device-card {
+    margin: 10px;
+    padding: 10px;
+  }
+
+  .session-card {
+    margin: 5px 0;
+    padding: 8px;
+  }
+}

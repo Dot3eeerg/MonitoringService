@@ -18,25 +18,26 @@ public class DeviceService : IDeviceService
         _mapper = mapper;
     }
 
-
-    public async Task<DeviceDto> AddSessionAsync(Guid id, string name, DateTime startTime, DateTime endTime, string version)
+    public async Task<DeviceDto> AddSessionAsync(SessionForCreationDto sessionForCreation)
     {
-        if (string.IsNullOrEmpty(name))
+        if (string.IsNullOrEmpty(sessionForCreation.Name))
         {
             throw new ArgumentException("Name cannot be null or empty");
         }
 
-        if (startTime >= endTime)
+        if (sessionForCreation.StartTime >= sessionForCreation.EndTime)
         {
             throw new ArgumentException("Start time cannot be greater than end time");
         }
 
-        var device = await _deviceRepository.GetByIdAsync(id);
+        var device = await _deviceRepository.GetByIdAsync(sessionForCreation.Id);
+    
         if (device == null)
         {
             device = new Device
             {
-                Id = id
+                Id = sessionForCreation.Id,
+                Sessions = new List<Session>()
             };
         }
 
@@ -44,26 +45,41 @@ public class DeviceService : IDeviceService
         {
             Id = Guid.NewGuid(),
             DeviceId = device.Id,
-            Name = name,
-            StartTime = startTime,
-            EndTime = endTime,
-            Version = version
+            Name = sessionForCreation.Name,
+            StartTime = sessionForCreation.StartTime,
+            EndTime = sessionForCreation.EndTime,
+            Version = sessionForCreation.Version, 
         };
-        
+    
         device.Sessions.Add(session);
-        
-        await _deviceRepository.AddOrUpdateDeviceAsync(device);
-
-        _logger.LogInformation("Added new session for user {Name} from {StartTime} to {EndTime}", name, startTime,
-            endTime);
-        
-        var deviceDto = _mapper.Map<DeviceDto>(device);
+    
+        var updatedDevice = await _deviceRepository.AddOrUpdateDeviceAsync(device, session);
+    
+        _logger.LogInformation(
+            "Added new session {SessionId} for device {DeviceId} from {StartTime} to {EndTime}", 
+            session.Id,
+            device.Id,
+            session.StartTime,
+            session.EndTime);
+    
+        var deviceDto = _mapper.Map<DeviceDto>(updatedDevice);
         return deviceDto;
     }
 
     public async Task<DeviceDto?> GetDeviceByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var device = await _deviceRepository.GetByIdAsync(id);
+
+        if (device == null)
+        {
+            throw new KeyNotFoundException("Device not found");
+            // throw new DeviceNotFoundException
+        }
+        
+        _logger.LogInformation("Getting device usage information from {DeviceId}", device.Id);
+        
+        var deviceDto = _mapper.Map<DeviceDto>(device);
+        return deviceDto;
     }
 
     public async Task<IEnumerable<DeviceDto>> GetAllDevicesAsync()
@@ -74,5 +90,21 @@ public class DeviceService : IDeviceService
         
         var devicesDto = _mapper.Map<IEnumerable<Device>, IEnumerable<DeviceDto>>(devices);
         return devicesDto;
+    }
+
+    public async Task<IEnumerable<SessionDto?>> GetSessionsByNameAsync(Guid id, string name)
+    {
+        var sessions = await _deviceRepository.GetSessionsByNameAsync(id, name);
+
+        if (sessions == null)
+        {
+            throw new KeyNotFoundException("Session not found");
+            // throw new SessionsNotFoundException
+        }
+        
+        _logger.LogInformation("Getting sessions from {@Sessions}", sessions);
+        
+        var sessionsDto = _mapper.Map<IEnumerable<Session>, IEnumerable<SessionDto>>(sessions);
+        return sessionsDto;
     }
 }

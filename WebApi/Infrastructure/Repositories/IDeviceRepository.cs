@@ -8,7 +8,7 @@ public interface IDeviceRepository
     // Task<Device?> GetByNameAsync(Guid id, string name);
     Task<IEnumerable<Device>> GetAllAsync();
     // Task DeleteOutdatedSessionsAsync(TimeSpan threshold);
-    Task<Device> AddOrUpdateDeviceAsync(Device device);
+    Task<Device> AddOrUpdateDeviceAsync(Device device, Session session);
     // Task DeleteAsync(Guid id);
-
+    public Task<IEnumerable<Session>> GetSessionsByNameAsync(Guid id, string name);
 }

@@ -18,7 +18,7 @@ public class RegisterMapper : IRegister
             .Map(dest => dest.EndTime, src => src.EndTime)
             .Map(dest => dest.Version, src => src.Version);
         
-        config.NewConfig<CreateSessionDto, Session>()
+        config.NewConfig<SessionForCreationDto, Session>()
             .Map(dest => dest.Id, src => Guid.NewGuid())
             .Map(dest => dest.Name, src => src.Name)
             .Map(dest => dest.StartTime, src => src.StartTime)

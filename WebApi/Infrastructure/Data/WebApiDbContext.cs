@@ -51,12 +51,22 @@ public class WebApiDbContext : DbContext
             Version = "1.0.0.57"
         };
         
+        var session3 = new Session
+        {
+            Id = Guid.NewGuid(),
+            DeviceId = device1.Id,
+            Name = "Kaladin Stormblessed",
+            StartTime = DateTime.UtcNow.AddHours(-4),
+            EndTime = DateTime.UtcNow.AddHours(-3),
+            Version = "1.0.0.57"
+        };
+        
         var device2 = new Device
         {
             Id = Guid.Parse("c3d4e5f6-7a8b-9c0d-1e2f-3a4b5c6d7e8f")
         };
 
-        var session3 = new Session
+        var session4 = new Session
         {
             Id = Guid.NewGuid(),
             DeviceId = device2.Id,
@@ -68,6 +78,6 @@ public class WebApiDbContext : DbContext
 
 
         modelBuilder.Entity<Device>().HasData(device1, device2);
-        modelBuilder.Entity<Session>().HasData(session1, session2, session3);
+        modelBuilder.Entity<Session>().HasData(session1, session2, session3, session4);
     }
 }

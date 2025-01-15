@@ -5,9 +5,10 @@ namespace WebApi.Services;
 
 public interface IDeviceService
 {
-    Task<DeviceDto> AddSessionAsync(Guid id, string name, DateTime startTime, DateTime endTime, string version);
+    Task<DeviceDto> AddSessionAsync(SessionForCreationDto session);
     Task<DeviceDto?> GetDeviceByIdAsync(Guid id);
     Task<IEnumerable<DeviceDto>> GetAllDevicesAsync();
+    Task<IEnumerable<SessionDto?>> GetSessionsByNameAsync(Guid id, string name);
 }
 
 public interface IServiceManager

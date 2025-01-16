@@ -1,7 +1,7 @@
 ﻿using MapsterMapper;
+using WebApi.Infrastructure.Repositories;
 using WebApi.Models;
 using WebApi.Models.DTO;
-using WebApi.Repositories;
 using WebApi.Services.Interfaces;
 
 namespace WebApi.Services;
@@ -23,18 +23,27 @@ public class DeviceService : IDeviceService
     {
         if (string.IsNullOrEmpty(sessionForCreation.Name))
         {
+            _logger.LogWarning("Attempted to create session with empty name for device {DeviceId}",
+                sessionForCreation.Id);
             throw new ArgumentException("Name cannot be null or empty");
         }
 
         if (sessionForCreation.StartTime >= sessionForCreation.EndTime)
         {
+            _logger.LogWarning(
+                "Invalid session time range for device {DeviceId}: Start {StartTime}, End {EndTime}", 
+                sessionForCreation.Id, 
+                sessionForCreation.StartTime, 
+                sessionForCreation.EndTime);
             throw new ArgumentException("Start time cannot be greater than end time");
         }
-
+        
+        _logger.LogDebug("Retrieving device {DeviceId}", sessionForCreation.Id);
         var device = await _deviceRepository.GetByIdAsync(sessionForCreation.Id);
     
         if (device == null)
         {
+            _logger.LogInformation("Creating new device with ID {DeviceId}", sessionForCreation.Id);
             device = new Device
             {
                 Id = sessionForCreation.Id,
@@ -52,17 +61,20 @@ public class DeviceService : IDeviceService
             Version = sessionForCreation.Version, 
         };
     
+        _logger.LogDebug("Adding new session {SessionId} to device {DeviceId}", 
+            session.Id, device.Id);
         device.Sessions.Add(session);
     
         var updatedDevice = await _deviceRepository.AddOrUpdateDeviceAsync(device, session);
-    
+        
         _logger.LogInformation(
-            "Added new session {SessionId} for device {DeviceId} from {StartTime} to {EndTime}", 
+            "Successfully added session {SessionId} for device {DeviceId} ({Name}: {StartTime} - {EndTime})", 
             session.Id,
             device.Id,
+            session.Name,
             session.StartTime,
             session.EndTime);
-    
+        
         var deviceDto = _mapper.Map<DeviceDto>(updatedDevice);
         return deviceDto;
     }
@@ -85,9 +97,10 @@ public class DeviceService : IDeviceService
 
     public async Task<IEnumerable<DeviceDto>> GetAllDevicesAsync()
     {
+        _logger.LogDebug("Retrieving all devices");
         var devices = await _deviceRepository.GetAllAsync();
         
-        _logger.LogInformation("Getting all devices");
+        _logger.LogInformation("Retrieved {DeviceCount} devices", devices.Count());
         
         var devicesDto = _mapper.Map<IEnumerable<Device>, IEnumerable<DeviceDto>>(devices);
         return devicesDto;
@@ -95,15 +108,20 @@ public class DeviceService : IDeviceService
 
     public async Task<DeviceDto> GetSessionsByNameAsync(Guid id, string name)
     {
+        _logger.LogDebug("Retrieving sessions for device {DeviceId} and user {Name}", id, name);
         var deviceUserSessions = await _deviceRepository.GetSessionsByNameAsync(id, name);
 
         if (deviceUserSessions == null)
         {
+            _logger.LogWarning("No sessions found for device {DeviceId} and user {Name}", id, name);
             throw new KeyNotFoundException("Session not found");
-            // throw new SessionsNotFoundException
         }
         
-        _logger.LogInformation("Getting sessions from {Name}", name);
+        _logger.LogInformation(
+            "Retrieved {SessionCount} sessions for device {DeviceId} and user {Name}", 
+            deviceUserSessions.Sessions.Count,
+            id,
+            name);
         
         var deviceUserSessionsDto = _mapper.Map<Device, DeviceDto>(deviceUserSessions);
         return deviceUserSessionsDto;

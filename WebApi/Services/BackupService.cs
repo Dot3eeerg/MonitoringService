@@ -22,10 +22,13 @@ public class BackupService : IBackupService
     {
         try
         {
+            _logger.LogDebug("Retrieving sessions for backup");
             var backupData = new BackupData
             {
                 Sessions = await _context.Sessions.ToListAsync(),
             };
+            
+            _logger.LogInformation("Creating backup with {SessionCount} sessions", backupData.Sessions.Count);
 
             var jsonString = JsonSerializer.Serialize(backupData, new JsonSerializerOptions
             {
@@ -33,7 +36,7 @@ public class BackupService : IBackupService
             });
 
             await File.WriteAllTextAsync(filePath, jsonString);
-            _logger.LogInformation("Created backup: {FilePath}", filePath);
+            _logger.LogInformation("Backup file created successfully at {FilePath}", filePath);
         }
         catch (Exception ex)
         {
@@ -48,29 +51,38 @@ public class BackupService : IBackupService
         {
             if (!File.Exists(filePath))
             {
+                _logger.LogWarning("Backup file not found at {FilePath}", filePath);
                 throw new FileNotFoundException("File not found", filePath);
             }
-
+            
+            _logger.LogInformation("Reading backup file from {FilePath}", filePath);
             var jsonString = await File.ReadAllTextAsync(filePath);
             var backupData = JsonSerializer.Deserialize<BackupData>(jsonString);
 
             if (backupData == null)
             {
+                _logger.LogError("Invalid backup data in file {FilePath}", filePath);
                 throw new InvalidDataException("Backup data could not be deserialized");
             }
 
+            _logger.LogInformation("Starting database restoration with {SessionCount} sessions",
+                backupData.Sessions.Count);
+
+            _logger.LogDebug("Clearing existing database records");
             _context.Sessions.RemoveRange(_context.Sessions);
             _context.Devices.RemoveRange(_context.Devices);
 
             var devices = backupData.Sessions.Select(s => s.DeviceId).Distinct()
                 .Select(deviceId => new Device { Id = deviceId }).ToList();
-
+            
+            _logger.LogDebug("Adding {DeviceCount} devices from backup", devices.Count);
             await _context.Devices.AddRangeAsync(devices);
+            
+            _logger.LogDebug("Adding {SessionCount} sessions from backup", backupData.Sessions.Count);
             await _context.Sessions.AddRangeAsync(backupData.Sessions);
 
             await _context.SaveChangesAsync();
-
-            _logger.LogInformation("Restored from backup: {FilePath}", filePath);
+            _logger.LogInformation("Database successfully restored from backup");
         }
         catch
         {

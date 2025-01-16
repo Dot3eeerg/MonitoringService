@@ -1,10 +1,11 @@
-using Microsoft.EntityFrameworkCore;
+using Serilog;
+using Serilog.Events;
 using WebApi.Extensions.ServiceExtensions;
-using WebApi.Infrastructure.Data;
-using WebApi.Repositories;
-using WebApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((context, configuration) => 
+    configuration.ReadFrom.Configuration(context.Configuration));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -29,11 +30,22 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseSerilogRequestLogging(options =>
+{
+    options.MessageTemplate = "Handled {RequestPath}";
+    
+    options.GetLevel = (httpContext, elapsed, ex) => LogEventLevel.Debug;
+    
+    options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+    {
+        diagnosticContext.Set("RequestHost", httpContext.Request.Host.Value);
+        diagnosticContext.Set("RequestScheme", httpContext.Request.Scheme);
+    };
+});
+
 app.UseHttpsRedirection();
 
 app.UseCors();
-
-app.UseAuthorization();
 
 app.MapControllers();
 

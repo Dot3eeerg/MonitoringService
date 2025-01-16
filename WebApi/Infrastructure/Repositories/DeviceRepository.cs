@@ -1,19 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebApi.Infrastructure.Data;
 using WebApi.Models;
-using WebApi.Repositories;
 
 namespace WebApi.Infrastructure.Repositories;
 
 public class DeviceRepository : IDeviceRepository
 {
     private readonly WebApiDbContext _context;
-    private readonly ILogger<DeviceRepository> _logger;
 
-    public DeviceRepository(WebApiDbContext context, ILogger<DeviceRepository> logger)
+    public DeviceRepository(WebApiDbContext context)
     {
         _context = context;
-        _logger = logger;
     }
 
     public async Task<Device?> GetByIdAsync(Guid id)
@@ -40,14 +37,11 @@ public class DeviceRepository : IDeviceRepository
         {
             _context.Devices.Add(device);
             _context.Sessions.Add(session);
-            _logger.LogInformation("Device {DeviceId} is added", device.Id);
         }
         else
         {
             _context.Sessions.Add(session);
             _context.Entry(existingDevice).CurrentValues.SetValues(device);
-        
-            _logger.LogInformation("Device {DeviceId} is updated", device.Id);
         }
     
         await _context.SaveChangesAsync();
@@ -62,7 +56,6 @@ public class DeviceRepository : IDeviceRepository
         if (device == null)
         {
             throw new KeyNotFoundException("Device not found");
-            // throw new DeviceNotFoundException
         }
 
         return device;

@@ -3,7 +3,6 @@ using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using WebApi.Infrastructure.Data;
 using WebApi.Infrastructure.Repositories;
-using WebApi.Repositories;
 using WebApi.Services;
 using WebApi.Services.Interfaces;
 

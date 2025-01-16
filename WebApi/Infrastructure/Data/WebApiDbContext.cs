@@ -12,20 +12,6 @@ public class WebApiDbContext : DbContext
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Device>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-            entity.HasMany(e => e.Sessions)
-                .WithOne(e => e.Device)
-                .HasForeignKey(e => e.DeviceId)
-                .OnDelete(DeleteBehavior.Cascade);
-        });
-
-        modelBuilder.Entity<Session>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-        });
-        
         var device1 = new Device
         {
             Id = Guid.Parse("f695ea23-8662-4a57-975a-f5afd26655db")

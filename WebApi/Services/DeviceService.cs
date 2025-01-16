@@ -2,6 +2,7 @@
 using WebApi.Models;
 using WebApi.Models.DTO;
 using WebApi.Repositories;
+using WebApi.Services.Interfaces;
 
 namespace WebApi.Services;
 
@@ -92,19 +93,19 @@ public class DeviceService : IDeviceService
         return devicesDto;
     }
 
-    public async Task<IEnumerable<SessionDto?>> GetSessionsByNameAsync(Guid id, string name)
+    public async Task<DeviceDto> GetSessionsByNameAsync(Guid id, string name)
     {
-        var sessions = await _deviceRepository.GetSessionsByNameAsync(id, name);
+        var deviceUserSessions = await _deviceRepository.GetSessionsByNameAsync(id, name);
 
-        if (sessions == null)
+        if (deviceUserSessions == null)
         {
             throw new KeyNotFoundException("Session not found");
             // throw new SessionsNotFoundException
         }
         
-        _logger.LogInformation("Getting sessions from {@Sessions}", sessions);
+        _logger.LogInformation("Getting sessions from {Name}", name);
         
-        var sessionsDto = _mapper.Map<IEnumerable<Session>, IEnumerable<SessionDto>>(sessions);
-        return sessionsDto;
+        var deviceUserSessionsDto = _mapper.Map<Device, DeviceDto>(deviceUserSessions);
+        return deviceUserSessionsDto;
     }
 }

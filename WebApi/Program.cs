@@ -17,6 +17,7 @@ builder.Services.ConfigureRepository();
 builder.Services.ConfigureService();
 builder.Services.ConfigureDbContext();
 builder.Services.ConfigureMapster();
+builder.Services.ConfigureBackupService();
 
 var app = builder.Build();
 

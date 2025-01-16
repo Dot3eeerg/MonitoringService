@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Models.DTO;
 using WebApi.Services;
+using WebApi.Services.Interfaces;
 
 namespace WebApi.Controllers;
 
@@ -44,23 +45,11 @@ public class DeviceController : ControllerBase
             return BadRequest("Session object is null");
         }
 
-        try 
-        {
-            var deviceDto = await _deviceService.AddSessionAsync(session);
-            return CreatedAtAction(
-                nameof(GetDeviceInfo), 
-                new { id = deviceDto.Id }, 
-                deviceDto);
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            // _logger.LogError(ex, "Error occurred while adding session");
-            return StatusCode(500, "An error occurred while processing your request");
-        }
+        var deviceDto = await _deviceService.AddSessionAsync(session);
+        return CreatedAtAction(
+            nameof(GetDeviceInfo), 
+            new { id = deviceDto.Id }, 
+            deviceDto);
     }
     
     // [HttpDelete("{id}")]

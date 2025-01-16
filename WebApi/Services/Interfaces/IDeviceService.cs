@@ -1,14 +1,13 @@
-﻿using WebApi.Models;
-using WebApi.Models.DTO;
+﻿using WebApi.Models.DTO;
 
-namespace WebApi.Services;
+namespace WebApi.Services.Interfaces;
 
 public interface IDeviceService
 {
     Task<DeviceDto> AddSessionAsync(SessionForCreationDto session);
     Task<DeviceDto?> GetDeviceByIdAsync(Guid id);
     Task<IEnumerable<DeviceDto>> GetAllDevicesAsync();
-    Task<IEnumerable<SessionDto?>> GetSessionsByNameAsync(Guid id, string name);
+    Task<DeviceDto> GetSessionsByNameAsync(Guid id, string name);
 }
 
 public interface IServiceManager

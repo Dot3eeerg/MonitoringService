@@ -5,6 +5,7 @@ using WebApi.Infrastructure.Data;
 using WebApi.Infrastructure.Repositories;
 using WebApi.Repositories;
 using WebApi.Services;
+using WebApi.Services.Interfaces;
 
 namespace WebApi.Extensions.ServiceExtensions;
 
@@ -38,4 +39,7 @@ public static class ServiceExtensions
         services.AddSingleton(config);
         services.AddScoped<IMapper, ServiceMapper>();
     }
+
+    public static void ConfigureBackupService(this IServiceCollection services) =>
+        services.AddScoped<IBackupService, BackupService>();
 }

@@ -26,7 +26,7 @@ export class SingleDeviceComponent {
 
   onSubmit() {
     if (!this.searchQuery.deviceId) {
-      this.error = "Please enter a Device ID";
+      this.error = "Не введён ID устройства";
       return;
     }
 
@@ -43,8 +43,8 @@ export class SingleDeviceComponent {
         this.loading = false;
       },
       error: (error) => {
-        console.error("Error fetching device:", error);
-        this.error = "Failed to load device data";
+        console.error("Ошибка при получении устройства:", error);
+        this.error = "Не получилось загрузить информацию об устройстве";
         this.loading = false;
       },
     });
@@ -57,5 +57,9 @@ export class SingleDeviceComponent {
     };
     this.device = null;
     this.error = null;
+  }
+
+  hasSessions() {
+    return this.device?.sessions && this.device.sessions.length > 0;
   }
 }

@@ -1,50 +1,55 @@
 <div class="search-form">
   <form (ngSubmit)="onSubmit()" #deviceForm="ngForm">
     <div class="form-group">
-      <label for="deviceId">Device ID:</label>
+      <label for="deviceId">ID устройства:</label>
       <input
         type="text"
         id="deviceId"
         name="deviceId"
         [(ngModel)]="searchQuery.deviceId"
-        placeholder="Enter device ID"
+        placeholder="Введите ID устройства"
         required
       />
     </div>
 
     <div class="form-group">
-      <label for="sessionName">Session Name (optional):</label>
+      <label for="sessionName">Имя пользователя (необязательно):</label>
       <input
         type="text"
         id="sessionName"
         name="sessionName"
         [(ngModel)]="searchQuery.sessionName"
-        placeholder="Enter session name"
+        placeholder="Введите имя пользователя"
       />
     </div>
 
     <div class="form-actions">
-      <button type="submit" class="button">Search</button>
-      <button type="button" class="button" (click)="resetForm()">Reset</button>
+      <button type="button" class="button" (click)="resetForm()">
+        Сбросить
+      </button>
+      <button type="submit" class="button">Поиск</button>
     </div>
   </form>
 </div>
 
-<div *ngIf="loading" class="loading">Loading...</div>
+<div *ngIf="loading" class="loading">Загрузка...</div>
 
-<div *ngIf="error" class="error">Error: {{ error }}</div>
+<div *ngIf="error" class="error">Ошибка: {{ error }}</div>
 
 <div *ngIf="device && !loading && !error" class="device-card">
   <h3>Device ID: {{ device.id }}</h3>
 
   <div class="sessions">
     <h4>Sessions:</h4>
-    <div *ngFor="let session of device.sessions" class="session-card">
-      <p>Name: {{ session.name }}</p>
-      <p>Start Time: {{ session.startTime | date: "medium" }}</p>
-      <p>End Time: {{ session.endTime | date: "medium" }}</p>
-      <p>Version: {{ session.version }}</p>
-      <hr />
+    <div v-if="hasSessions">
+      <div *ngFor="let session of device.sessions" class="session-card">
+        <p>Name: {{ session.name }}</p>
+        <p>Start Time: {{ session.startTime | date: "medium" }}</p>
+        <p>End Time: {{ session.endTime | date: "medium" }}</p>
+        <p>Version: {{ session.version }}</p>
+        <hr />
+      </div>
     </div>
+    <div v-else>Нет информации о доступных сессиях</div>
   </div>
 </div>

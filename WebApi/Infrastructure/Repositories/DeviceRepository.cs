@@ -54,9 +54,10 @@ public class DeviceRepository : IDeviceRepository
         return device;
     }
 
-    public async Task<IEnumerable<Session>> GetSessionsByNameAsync(Guid id, string name)
+    public async Task<Device> GetSessionsByNameAsync(Guid id, string name)
     {
-        var device = await GetByIdAsync(id);
+        var device = await _context.Devices.Include(d => d.Sessions.Where(n => n.Name == name))
+            .FirstOrDefaultAsync(d => d.Id == id);
         
         if (device == null)
         {
@@ -64,8 +65,6 @@ public class DeviceRepository : IDeviceRepository
             // throw new DeviceNotFoundException
         }
 
-        return device.Sessions
-            .Where(s => s.Name == name)
-            .ToList();
+        return device;
     }
 }

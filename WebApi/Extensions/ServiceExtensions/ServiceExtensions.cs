@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
+using WebApi.CustomExceptionMiddleware;
 using WebApi.Infrastructure.Data;
 using WebApi.Infrastructure.Repositories;
 using WebApi.Services;
@@ -41,4 +42,7 @@ public static class ServiceExtensions
 
     public static void ConfigureBackupService(this IServiceCollection services) =>
         services.AddScoped<IBackupService, BackupService>();
+
+    public static void ConfigureExceptionHandler(this IServiceCollection services)
+        => services.AddExceptionHandler<GlobalExceptionHandler>();
 }

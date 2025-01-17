@@ -19,6 +19,7 @@ builder.Services.ConfigureService();
 builder.Services.ConfigureDbContext();
 builder.Services.ConfigureMapster();
 builder.Services.ConfigureBackupService();
+builder.Services.ConfigureExceptionHandler();
 
 var app = builder.Build();
 
@@ -42,6 +43,8 @@ app.UseSerilogRequestLogging(options =>
         diagnosticContext.Set("RequestScheme", httpContext.Request.Scheme);
     };
 });
+
+app.UseExceptionHandler(_ => { });
 
 app.UseHttpsRedirection();
 

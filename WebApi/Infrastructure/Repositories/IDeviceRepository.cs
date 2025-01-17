@@ -8,4 +8,6 @@ public interface IDeviceRepository
     Task<IEnumerable<Device>> GetAllAsync();
     Task<Device> AddOrUpdateDeviceAsync(Device device, Session session);
     public Task<Device> GetSessionsByNameAsync(Guid id, string name);
+    public Task<Session> GetSessionByIdAsync(Guid id);
+    public Task DeleteSessionAsync(Session session);
 }

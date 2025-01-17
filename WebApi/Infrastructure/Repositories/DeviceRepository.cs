@@ -60,4 +60,22 @@ public class DeviceRepository : IDeviceRepository
 
         return device;
     }
+
+    public async Task<Session> GetSessionByIdAsync(Guid id)
+    {
+        var session = await _context.Sessions.FirstOrDefaultAsync(s => s.Id == id);
+
+        if (session == null)
+        {
+            throw new KeyNotFoundException("Session not found");
+        }
+        
+        return session;
+    }
+
+    public async Task DeleteSessionAsync(Session session)
+    {
+        _context.Sessions.Remove(session);
+        await _context.SaveChangesAsync();
+    }
 }

@@ -13,6 +13,7 @@ public class RegisterMapper : IRegister
             .Map(dest => dest.Sessions, src => src.Sessions);
 
         config.NewConfig<Session, SessionDto>()
+            .Map(dest => dest.sessionId, src => src.Id)
             .Map(dest => dest.Name, src => src.Name)
             .Map(dest => dest.StartTime, src => src.StartTime)
             .Map(dest => dest.EndTime, src => src.EndTime)

@@ -19,4 +19,8 @@ export class WebApiService {
   getSingleDevice(route: string): Observable<Device> {
     return this.http.get<Device>(this.apiUrl + route);
   }
+
+  deleteSession(deviceId: string, sessionId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${deviceId}/${sessionId}`);
+  }
 }

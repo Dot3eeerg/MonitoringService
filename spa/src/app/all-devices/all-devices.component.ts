@@ -33,4 +33,23 @@ export class AllDevicesComponent implements OnInit {
       },
     });
   }
+
+  hasSessions(device: Device): boolean {
+    return device.sessions && device.sessions.length > 0;
+  }
+
+  deleteSession(deviceId: string, sessionId: string) {
+    this.loading = true;
+    this.webApiService.deleteSession(deviceId, sessionId).subscribe({
+      next: () => {
+        // Обновляем список после успешного удаления
+        this.loadData();
+      },
+      error: (error) => {
+        console.error("Error deleting session:", error);
+        this.error = "Failed to delete session";
+        this.loading = false;
+      },
+    });
+  }
 }

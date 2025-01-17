@@ -109,3 +109,21 @@ nav {
     padding: 5px;
   }
 }
+
+.delete-button {
+  background-color: #ff4444;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  .transition();
+
+  &:hover {
+    background-color: darken(#ff4444, 10%);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}

@@ -19,42 +19,95 @@ public class DeviceController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllDevices()
     {
-        var devices = await _deviceService.GetAllDevicesAsync();
-        return Ok(devices);
+        try
+        {
+            var devices = await _deviceService.GetAllDevicesAsync();
+            return Ok(devices);
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "An error occured while getting the devices");
+        }
     }
     
     [HttpGet("{id}")]
     public async Task<IActionResult> GetDeviceInfo(Guid id)
     {
-        var device = await _deviceService.GetDeviceByIdAsync(id);
-        return Ok(device);
+        try
+        {
+            var device = await _deviceService.GetDeviceByIdAsync(id);
+            return Ok(device);
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound($"Device with ID: {id} not found");
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "An error occured while getting the device info");
+        }
     }
     
     [HttpGet("{id}/{name}")]
     public async Task<IActionResult> GetSessionsByName(Guid id, string name)
     {
-        var device = await _deviceService.GetSessionsByNameAsync(id, name);
-        return Ok(device);
+        try
+        {
+            var device = await _deviceService.GetSessionsByNameAsync(id, name);
+            return Ok(device);
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound($"Sessions with name: {name} not found");
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "An error occured while getting the sessions by name");
+        }
     }
     
     [HttpPost]
     public async Task<IActionResult> AddSession([FromBody] SessionForCreationDto? session)
     {
-        if (session == null)
+        try
         {
-            return BadRequest("Session object is null");
-        }
+            if (session == null)
+            {
+                return BadRequest("Session object is null");
+            }
 
-        var deviceDto = await _deviceService.AddSessionAsync(session);
-        return CreatedAtAction(
-            nameof(GetDeviceInfo), 
-            new { id = deviceDto.Id }, 
-            deviceDto);
+            var deviceDto = await _deviceService.AddSessionAsync(session);
+            return CreatedAtAction(
+                nameof(GetDeviceInfo),
+                new { id = deviceDto.Id },
+                deviceDto);
+        }
+        catch (KeyNotFoundException)
+        {
+            return BadRequest("Username cannot be null or empty / session start time cannot be greater than end time");
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "An error occured while adding new session");
+        }
     }
-    
-    // [HttpDelete("{id}")]
-    // public ActionResult DeleteDeviceInfo(Guid id)
-    // {
-    //     
-    // }
+
+    [HttpDelete("{deviceId}/{sessionId}")]
+    public async Task<ActionResult> DeleteDeviceInfo(Guid deviceId, Guid sessionId)
+    {
+        try
+        {
+            await _deviceService.DeleteSessionAsync(deviceId, sessionId);
+
+            return NoContent();
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound($"Device with ID: {deviceId} not found / Session with Id: {sessionId} not found");
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "An error occured while deleting the session");
+        }
+    }
 }

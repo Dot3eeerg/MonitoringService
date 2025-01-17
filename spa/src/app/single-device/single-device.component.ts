@@ -62,4 +62,19 @@ export class SingleDeviceComponent {
   hasSessions() {
     return this.device?.sessions && this.device.sessions.length > 0;
   }
+
+  deleteSession(deviceId: string, sessionId: string) {
+    this.loading = true;
+    this.webApiService.deleteSession(deviceId, sessionId).subscribe({
+      next: () => {
+        // Перезагружаем информацию об устройстве
+        this.onSubmit();
+      },
+      error: (error) => {
+        console.error("Ошибка при удалении сессии:", error);
+        this.error = "Не удалось удалить сессию";
+        this.loading = false;
+      },
+    });
+  }
 }

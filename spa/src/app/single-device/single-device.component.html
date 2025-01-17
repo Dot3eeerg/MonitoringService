@@ -47,6 +47,12 @@
         <p>Start Time: {{ session.startTime | date: "medium" }}</p>
         <p>End Time: {{ session.endTime | date: "medium" }}</p>
         <p>Version: {{ session.version }}</p>
+        <button
+          class="delete-button"
+          (click)="deleteSession(device.id, session.sessionId)"
+        >
+          Удалить сессию
+        </button>
         <hr />
       </div>
     </div>

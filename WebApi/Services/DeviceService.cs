@@ -86,7 +86,6 @@ public class DeviceService : IDeviceService
         if (device == null)
         {
             throw new KeyNotFoundException("Device not found");
-            // throw new DeviceNotFoundException
         }
         
         _logger.LogInformation("Getting device usage information from {DeviceId}", device.Id);
@@ -125,5 +124,29 @@ public class DeviceService : IDeviceService
         
         var deviceUserSessionsDto = _mapper.Map<Device, DeviceDto>(deviceUserSessions);
         return deviceUserSessionsDto;
+    }
+
+    public async Task DeleteSessionAsync(Guid deviceId, Guid sessionId)
+    {
+        _logger.LogDebug("Retrieving sessions for device {DeviceId}", deviceId);
+        var device = await _deviceRepository.GetByIdAsync(deviceId);
+
+        if (device == null)
+        {
+            _logger.LogWarning("No device with {DeviceId} was found", deviceId);
+            throw new KeyNotFoundException("Device not found");
+        }
+
+        var session = await _deviceRepository.GetSessionByIdAsync(sessionId);
+
+        if (session == null)
+        {
+            _logger.LogWarning("No session with {SessionId} was found", sessionId);
+            throw new KeyNotFoundException("Session not found");
+        }
+
+        await _deviceRepository.DeleteSessionAsync(session);
+        
+        _logger.LogInformation("Session {SessionId} deleted from device {DeviceId}", sessionId, deviceId);
     }
 }

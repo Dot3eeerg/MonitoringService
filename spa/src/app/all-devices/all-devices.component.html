@@ -9,12 +9,23 @@
 
       <div class="sessions">
         <h4>Sessions:</h4>
-        <div *ngFor="let session of device.sessions" class="session-card">
-          <p>Name: {{ session.name }}</p>
-          <p>Start Time: {{ session.startTime | date: "medium" }}</p>
-          <p>End Time: {{ session.endTime | date: "medium" }}</p>
-          <p>Version: {{ session.version }}</p>
-          <hr />
+        <div *ngIf="hasSessions(device)">
+          <div *ngFor="let session of device.sessions" class="session-card">
+            <p>Name: {{ session.name }}</p>
+            <p>Start Time: {{ session.startTime | date: "medium" }}</p>
+            <p>End Time: {{ session.endTime | date: "medium" }}</p>
+            <p>Version: {{ session.version }}</p>
+            <button
+              class="delete-button"
+              (click)="deleteSession(device.id, session.sessionId)"
+            >
+              Удалить сессию
+            </button>
+            <hr />
+          </div>
+        </div>
+        <div *ngIf="!hasSessions(device)" class="no-sessions">
+          Нет информации о доступных сессиях
         </div>
       </div>
     </div>

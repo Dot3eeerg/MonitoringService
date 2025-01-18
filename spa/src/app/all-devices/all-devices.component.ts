@@ -28,7 +28,7 @@ export class AllDevicesComponent implements OnInit {
       },
       error: (error) => {
         console.error("Error fetching data:", error);
-        this.error = "Failed to load data";
+        this.error = "Не получилось загрузить данные";
         this.loading = false;
       },
     });
@@ -42,12 +42,11 @@ export class AllDevicesComponent implements OnInit {
     this.loading = true;
     this.webApiService.deleteSession(deviceId, sessionId).subscribe({
       next: () => {
-        // Обновляем список после успешного удаления
         this.loadData();
       },
       error: (error) => {
         console.error("Error deleting session:", error);
-        this.error = "Failed to delete session";
+        this.error = "Не получилось удалить сессию";
         this.loading = false;
       },
     });

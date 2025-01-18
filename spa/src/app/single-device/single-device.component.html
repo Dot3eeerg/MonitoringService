@@ -56,6 +56,8 @@
         <hr />
       </div>
     </div>
-    <div v-else>Нет информации о доступных сессиях</div>
+    <div *ngIf="!hasSessions()" class="no-sessions">
+      Нет информации о доступных сессиях
+    </div>
   </div>
 </div>

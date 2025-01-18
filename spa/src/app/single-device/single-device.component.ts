@@ -59,8 +59,10 @@ export class SingleDeviceComponent {
     this.error = null;
   }
 
-  hasSessions() {
-    return this.device?.sessions && this.device.sessions.length > 0;
+  hasSessions(): boolean {
+    return (
+      this.device?.sessions !== undefined && this.device.sessions.length > 0
+    );
   }
 
   deleteSession(deviceId: string, sessionId: string) {

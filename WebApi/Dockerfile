@@ -2,6 +2,7 @@
 USER $APP_UID
 WORKDIR /app
 EXPOSE 5001
+RUN mkdir -p /app/Logs /app/Backups
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release

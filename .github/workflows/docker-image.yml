@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-and-run:
-    runs-on: IVANZERG
+    runs-on: [self-hosted, windows]
 
     steps:
       - name: Checkout repository

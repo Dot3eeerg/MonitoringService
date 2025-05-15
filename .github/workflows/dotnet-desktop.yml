@@ -64,12 +64,13 @@ jobs:
       with:
         fetch-depth: 0
 
-    # Install the .NET Core workload
-    - name: Install .NET Core
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-        install-dir: C:\dotnet
+    - name: Install .NET SDK manually
+      run: |
+        $dotnetInstallDir = "C:\dotnet"
+        New-Item -ItemType Directory -Force -Path $dotnetInstallDir | Out-Null
+        Invoke-WebRequest -Uri https://dot.net/v1/dotnet-install.ps1 -OutFile dotnet-install.ps1
+        .\dotnet-install.ps1 -Version 8.0.100 -InstallDir $dotnetInstallDir
+        echo "$dotnetInstallDir" | Out-File -Append -Encoding ascii $env:GITHUB_PATH
 
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
     - name: Setup MSBuild.exe

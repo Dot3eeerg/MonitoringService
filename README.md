@@ -27,3 +27,4 @@ http://localhost:5001/api/backup/restore?fileName=backup_20250116162006.json
 ```
 
 Логи выводятся как в терминал, так и в файл. В проекте WebApi в директории Logs можно найти все логи.
+

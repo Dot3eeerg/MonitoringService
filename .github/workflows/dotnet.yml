@@ -13,12 +13,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install .NET SDK 8.0.1 manually
+      - name: Install .NET SDK 8.0.204 manually
         shell: powershell
         run: |
           $dotnetDir = "C:\actions-runner\_work\dotnet"
           Invoke-WebRequest -Uri https://dot.net/v1/dotnet-install.ps1 -OutFile dotnet-install.ps1
-          .\dotnet-install.ps1 -Version 8.0.1 -InstallDir $dotnetDir
+          .\dotnet-install.ps1 -Version 8.0.204 -InstallDir $dotnetDir
           echo "DOTNET_ROOT=$dotnetDir" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           echo "PATH=$dotnetDir;$env:PATH" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 

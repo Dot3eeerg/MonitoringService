@@ -10,12 +10,16 @@ jobs:
   build:
     runs-on: self-hosted
 
-    env:
-      DOTNET_ROOT: C:\actions-runner\_work\dotnet
-      PATH: C:\actions-runner\_work\dotnet;${{ env.PATH }}
-
     steps:
       - uses: actions/checkout@v4
+
+      - name: Prepend dotnet path to PATH
+        shell: powershell
+        run: |
+          $env:DOTNET_ROOT = "C:\actions-runner\_work\dotnet"
+          $env:PATH = "C:\actions-runner\_work\dotnet;$env:PATH"
+          echo "DOTNET_ROOT=$env:DOTNET_ROOT" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          echo "PATH=$env:PATH" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
